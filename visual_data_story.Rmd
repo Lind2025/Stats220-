@@ -1,0 +1,76 @@
+---
+title: "Public Bus Trip Observations: Comfort, Crowding, and Behavior"
+author: "Lindi Zhang"
+output: html_document
+---
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE, error=FALSE)
+```
+
+```{js}
+$(function() {
+  $(".level2").css('visibility', 'hidden');
+  $(".level2").first().css('visibility', 'visible');
+  $(".container-fluid").height($(".container-fluid").height() + 300);
+  $(window).on('scroll', function() {
+    $('h2').each(function() {
+      var h2Top = $(this).offset().top - $(window).scrollTop();
+      var windowHeight = $(window).height();
+      if (h2Top >= 0 && h2Top <= windowHeight / 2) {
+        $(this).parent('div').css('visibility', 'visible');
+      } else if (h2Top > windowHeight / 2) {
+        $(this).parent('div').css('visibility', 'hidden');
+      }
+    });
+  });
+})
+```
+
+```{css}
+.figcaption {display: none}
+@import url('https://fonts.googleapis.com/css2?family=Big+Shoulders+Inline&family=Roboto+Condensed&display=swap');
+
+h2{
+color:red;
+font-family: "Big Shoulders Inline", serif;
+font-weight: 800;
+font-style: italic;
+ 
+}
+
+body{
+font-family: "Roboto Condensed", serif;
+font-weight: 700;
+font-style: normal;
+}
+```
+
+## Comfort under Different Bus Crowding Levels
+
+This plot shows how comfort ratings vary depending on how crowded the bus is.
+We can observe that the comfort level tends to decrease as the bus becomes more full.
+
+![Boxplot of comfort by bus occupancy level. Comfort is lowest when the bus is full.](C:/Users/Lenovo/OneDrive - The University of Auckland/Desktop/STATS220/Project 4/plot1.png)
+
+## Headphone Use among Passengers
+
+This bar chart shows how many people were wearing headphones. 
+Most passengers were wearing headphones sometimes, with fewer wearing them all the time or not at all.
+
+![Bar chart of headphone usage groups. "Some" is the most common category.](C:/Users/Lenovo/OneDrive - The University of Auckland/Desktop/STATS220/Project 4/plot2.png)
+ 
+
+
+## Comfort Ratings by Time of Day
+
+This chart shows the average comfort score at different hours of the day.
+It reveals a pattern where comfort may vary depending on time, possibly due to crowding.
+
+![Bar chart of average comfort per hour. Comfort varies across the day.](C:/Users/Lenovo/OneDrive - The University of Auckland/Desktop/STATS220/Project 4/plot3.png)
+
+
+
+
