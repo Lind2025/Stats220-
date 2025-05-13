@@ -1,0 +1,124 @@
+---
+title: My dynamic report
+output: html_fragment
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE, error=FALSE)
+
+```
+ 
+```{css}
+@import url('https://fonts.googleapis.com/css2?family=Big+Shoulders+Inline:opsz,wght@10..72,100..900&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap');
+
+h2{
+color:red;
+font-family: "Big Shoulders Inline", serif;
+font-weight: 800;
+font-style: italic;
+ 
+}
+
+body{
+font-family: "Roboto Condensed", serif;
+font-weight: 700;
+font-style: normal;
+}
+```
+
+## Introduction
+
+This report analyzes observational data collected on public transport use. Data is collected through Google Forms surveys and stored in Google Forms. The goal is to investigate data such as the time taken by passengers, the number of passengers, comfort and bus occupancy.
+
+```{r}
+library(tidyverse)
+```
+
+## data frame
+```{r}
+## data prepare
+logged_data = read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vTUV2Zh8ODNKQVXaxTVKh35PTMexvnA7ocRS8FFg_xCbRyEbtaEuR-7zewIq6x0JoCoIGVMpfrKxPHP/pub?gid=618838588&single=true&output=csv")
+
+
+## I renamed each column
+latest_data = logged_data %>% 
+  rename(Date=2,Time=3,Passengers=4,P_action =5,bus_full_Status =6,comfort_rate=7)
+
+## Remove the first column (unwanted data)
+latest_data  = latest_data[ ,-1]  
+latest_data
+
+
+
+
+```
+
+ 
+## Summary values
+```{r}
+
+summary_values <- latest_data %>%
+  summarise(
+    # Calculate the mean number of passengers, and mean environment score
+    Avg_Passenger_Count = round(mean(Passengers, na.rm = TRUE),0),
+    max_passenger = max(Passengers, na.rm = TRUE),
+    max_passenger_time =format(Time[which.max(Passengers)]),
+    Avg_Environment_Rating = round(mean(comfort_rate, na.rm = TRUE),2),
+    most_feedback = names(table(comfort_rate)[which.max(table(comfort_rate))])
+  )
+
+```
+```{r}
+paste0("From our summary of the survey we know the average passengers number is ",summary_values["Avg_Passenger_Count"]," and the overall feedback score of the comfort is ",summary_values["Avg_Environment_Rating"])
+```
+## passengers number count in different time
+
+```{r}
+latest_data %>% 
+  ggplot() +
+   geom_bar(aes(x = Time),fill = "red") +
+  labs(title = "Passenger Count by Time Period", 
+       x = "Time", 
+       y = "Passengers") +
+  theme_minimal()
+```
+
+```{r}
+paste0("In this bar chart we can see the max number of passengers is ",summary_values["max_passenger"]," at ",summary_values["max_passenger_time"] )
+```
+
+
+## bus_full_Status & comfort_rate
+```{r}
+latest_data %>% 
+  ggplot() +
+  geom_bar(aes(x = comfort_rate),fill = "blue") +
+  labs(title = "What is the full status of the bus for passengers' comfort", 
+       x = "comfort_rate", 
+       y = "bus_full_Status") +
+  theme_minimal()
+
+# The following R code was used to analyze and visualize my survey about the bus trip survey data for the report.
+# It includes:
+# 
+# 1. Summary statistics:
+#    - The average number of passengers per trip (Avg_Passenger_Count).
+#    - The highest recorded number of passengers on a trip (max_passenger).
+#    - The time at which the maximum number of passengers was recorded (max_passenger_time).
+#    - The average comfort rating given by passengers (Avg_Environment_Rating).
+#    - The most frequently given comfort rating in the survey (most_feedback).
+# 
+# 2. Data Visualizations:
+#    - A bar chart showing passenger counts at different time periods.
+#    - A bar chart visualizing the distribution of comfort ratings.
+# 
+# These insights help us understand passenger trends and comfort levels, which can be used to improve future bus services.
+
+```
+
+```{r}
+paste0("In this table, we can see the most comfort rate is ",summary_values["most_feedback"])
+```
+```{r}
+library("tidyverse")
+```
